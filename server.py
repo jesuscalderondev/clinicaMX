@@ -155,6 +155,7 @@ from apis import apis
 app.register_blueprint(apis)
 
 if __name__ == '__main__':
+    print(datetime.now())
     load_dotenv()
     Base.metadata.create_all(engine)
     agendar()
