@@ -13,7 +13,6 @@ from functions import *
 
 app = Flask(__name__)
 app.secret_key = getenv('SECRET_KEY')
-Bootstrap(app)
 
 CORS(app, origins=['*'], supports_credentials=True)
 
@@ -54,7 +53,7 @@ def login():
             flash("El usuario no existe")
             return redirect('/')
     except Exception as e:
-        print(e)
+        flash(e)
         return redirect('/')
     
 
@@ -85,7 +84,7 @@ def subir_video():
             else:
                 flash('Se requier al menos un video para subir')
         except Exception as e:
-            print(e)
+            flash(e)
             session.rollback()
             flash('El archivo seleccionado no es seguro o válido, verifique que sea formato .mp4')
         
@@ -101,7 +100,7 @@ def eliminarVideo(id):
         session.commit()
         flash('Video eliminado de manera correcta')
     except Exception as e:
-        print(e)
+        flash(e)
         session.rollback()
     finally:
         return redirect('/subir_video')
@@ -135,7 +134,7 @@ def cambiarAgenda():
 
             flash('Se ha actualizado de manera correcta la fecha para trabajo')
         except Exception as e:
-            print(e)
+            flash(e)
             session.rollback()
             flash('Ha ocurrido un error a la hora de modificar la fecha')
     return render_template('agenda.html', fechaMin = date.today() + timedelta(days=3))
@@ -155,7 +154,6 @@ from apis import apis
 app.register_blueprint(apis)
 
 if __name__ == '__main__':
-    print(datetime.now())
     load_dotenv()
     Base.metadata.create_all(engine)
     agendar()

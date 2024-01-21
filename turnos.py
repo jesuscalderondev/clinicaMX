@@ -29,7 +29,7 @@ def registrarTurno():
             session.commit()
             flash(f'Turno registrado de manera exitosa, codigo de turno {nuevoTurno.id}')
         except Exception as e:
-            print(e)
+            flash(e)
             session.rollback()
             flash('El turno no pudo ser creado, selecciona una fecha válida')
     hoy = date.today()
@@ -54,7 +54,7 @@ def cancelarTurnoId(id):
         session.commit()
         flash('Turno cancelado de manera exitosa')
     except Exception as e:
-        print(e)
+        flash(e)
         session.rollback()
     
     finally:
