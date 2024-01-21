@@ -28,6 +28,9 @@ def agendar():
         print("Error: ", e)
         session.rollback()
 
+agendar()
+programador.add_job(agendar, 'cron', hour=0, minute=0)
+
 @app.route('/')
 def index():
     if 'token' in cookies:
@@ -155,9 +158,7 @@ from apis import apis
 app.register_blueprint(apis)
 
 if __name__ == '__main__':
+    programador.start()
     load_dotenv()
     Base.metadata.create_all(engine)
-    agendar()
-    programador.add_job(agendar, 'cron', hour=0, minute=0)
-    programador.start()
     app.run(debug=True, port=getenv('PORT'))
