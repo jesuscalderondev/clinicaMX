@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, flash, url_for
+from flask import Flask, render_template, request, redirect, flash
 from flask import session as cookies
 from flask_cors import CORS
 from os import getenv
@@ -11,6 +11,8 @@ from database import *
 from functions import *
 
 app = Flask(__name__)
+
+load_dotenv()
 app.secret_key = getenv('SECRET_KEY')
 
 CORS(app, origins=['*'], supports_credentials=True)
@@ -156,6 +158,6 @@ if __name__ == '__main__':
     load_dotenv()
     Base.metadata.create_all(engine)
     agendar()
-    programador.start()
     programador.add_job(agendar, 'cron', hour=0, minute=0)
+    programador.start()
     app.run(debug=True, port=getenv('PORT'))
