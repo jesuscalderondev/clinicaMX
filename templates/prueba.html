@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.min.js"></script>
+  <title>Actualización de registros</title>
+</head>
+<body>
+  <h1>Actualización de registros</h1>
+  <button id="actualizar">Actualizar</button>
+  <div>
+    <table id="registros">
+        <thead>
+            <th>id</th>
+            <th>nombre</th>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+  </div>
+
+  <script>
+    var socket = io('127.0.0.1:5000');
+    // Suscríbete al evento de actualización
+    socket.on('conectar', function(data) {
+      // Actualiza la lista de registros
+      console.log(data);
+      var registros = document.getElementById('registros');
+      registros.innerHTML = '';
+      for (var i in data) {
+        console.log(i);
+        var fila = registros.insertRow();
+        var celda1 = fila.insertCell();
+        var celda2 = fila.insertCell();
+
+        celda1.innerHTML = i.id;
+        celda2.innerHTML = i.nombre;
+        registros.appendChild(fila);
+
+      }
+    });
+
+    // Escucha el clic del botón
+    document.getElementById('actualizar').addEventListener('click', function() {
+      // Dispara el evento de actualización
+      socket.emit('actualizar', {'id' : 4, 'nombre' : 'sisa'});
+    });
+  </script>
+</body>
+</html>

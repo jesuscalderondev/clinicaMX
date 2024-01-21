@@ -1,0 +1,32 @@
+{% extends 'plantilla.html' %}
+{%block body%}
+<div class="container-sm shadow rounded bg-white text-center">
+    <h2>Cambiar agenda</h2>
+    <form action="/agenda/cambiar" method="post">
+        <div class="form mb-3">
+            <label>Fecha</label>
+            <input type="date" name="fecha" class="form-control" min="{{fechaMin}}">
+        </div>
+        <div class="form mb-3">
+            <label>Hora inicio</label>
+            <input type="time" name="inicio" class="form-control">
+            
+        </div>
+        <div class="form mb-3">
+            <label>Hora cierre</label>
+            <input type="time" name="fin" class="form-control">
+        </div>
+        <div class="form mb-3">
+            <label>Intervalo</label>
+            <select name="intervalo" class="form-control">
+                <option selected>Sin Asignar</option>
+                <option value="15">15 Minutos</option>
+                <option value="20">20 Minutos</option>
+                <option value="30">30 Minutos</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success mb-3"><i class="fa-solid fa-plus-circle"></i> Actualizar</button>
+        <button type="reset" class="btn btn-danger mb-3"><i class="fa-solid fa-xmark-circle"></i> Cancelar</button>
+    </form>
+</div>
+{%endblock%}

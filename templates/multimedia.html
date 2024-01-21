@@ -1,0 +1,40 @@
+{% extends 'plantilla.html' %}
+
+{%block body%}
+
+<div class="row">
+    <div class="col-4 d-flex justify-content-center align-items-center">
+        <form action="/subir_video" method="post" class="shadow rounded" enctype="multipart/form-data">
+            <h2>SUBE TU VIDEO</h2>
+
+            <div class="input-group">
+                <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04"
+                    aria-label="Subir" name="video" accept=".mp4">
+                <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon04">Subir</button>
+            </div>
+
+        </form>
+    </div>
+    <div class="col-8 row">
+        {%for video in videos%}
+        <div class="card m-3 col-3" style="width: 20rem;">
+            <video id="video{{video.id}}">
+
+            </video>
+            <div class="card-body">
+                <h7 class="card-title"><b>Titulo:</b> {{video.titulo}}</h7>
+                <hr>
+                <p class="card-text"><b>Fecha de subida:</b> {{video.fecha}}</p>
+                <a href="/eliminar/video/{{video.id}}" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+            </div>
+        </div>
+
+        <script>
+            var video = document.querySelector('#video{{video.id}}');
+
+            video.setAttribute('src', '/{{video.ruta}}');
+        </script>
+        {%endfor%}
+    </div>
+</div>
+{%endblock%}

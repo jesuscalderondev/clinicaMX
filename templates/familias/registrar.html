@@ -1,0 +1,31 @@
+{% extends 'plantilla.html'%}
+
+{%block body%}
+<div class="container-sm shadow rounded bg-white text-center">
+    <h2>Registro de familia</h2>
+    <form action="/familias/registrar" method="post">
+        <div class="form-floating mb-3    ">
+            <input type="text" name="nombre" class="form-control">
+            <label>Nombre</label>
+        </div>
+        <div class="form-floating mb-3    ">
+            <input type="text" name="colonia" class="form-control">
+            <label>Colonia</label>
+        </div>
+        <div class="form-floating mb-3    ">
+            <input type="text" name="direccion" class="form-control">
+            <label>Dirección</label>
+        </div>
+        <div class="form mb-3">
+            <select name="voluntario" class="form-control">
+                <option selected>Sin Asignar</option>
+                {%for promotor in promotores%}
+                <option value="{{promotor.id}}">{{promotor}}</option>
+                {%endfor%}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success mb-3"><i class="fa-solid fa-plus-circle"></i> Registrar</button>
+        <button type="reset" class="btn btn-danger mb-3"><i class="fa-solid fa-xmark-circle"></i> Cancelar</button>
+    </form>
+</div>
+{%endblock%}

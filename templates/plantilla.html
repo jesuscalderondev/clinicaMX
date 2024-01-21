@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
+	<link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
+	<script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
+	<script src="{{url_for('static', filename='js/bootstrap.bundle.min.js')}}"></script>
+	<script src="{{url_for('static', filename='js/bootstrap.esm.min.js')}}"></script>
+	<script src="{{url_for('static', filename='icons/js/all.min.js')}}"></script>
+	<title>Inicio</title>
+</head>
+
+<body class="bg-light">
+	<header>
+		<nav class="navbar bg-body-tertiary fixed-top shadow-lg">
+			<div class="container-fluid">
+				<a class="navbar-brand text-start" href="#">
+					<i class="fa-solid fa-paperclip text-primary"></i>
+				</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+					data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
+					aria-labelledby="offcanvasNavbarLabel">
+					<div class="offcanvas-header">
+						<h5 class="offcanvas-title" id="offcanvasNavbarLabel"><i
+								class="fa-solid fa-paperclip text-primary"></i><span class="text-primary">J</span><span
+								class="text-danger">K</span> SOFT</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+					</div>
+					<div class="offcanvas-body">
+						<ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+							<li class="nav-item">
+								<a class="nav-link active" aria-current="page" href="/home"><i
+										class="fa-solid fa-home"></i> Inicio</a>
+							</li>
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+									aria-expanded="false">
+									<i class="fa-solid fa-users-line"></i> Turnos
+								</a>
+								<ul class="dropdown-menu dropdown-menu-dark">
+									<li><a class="dropdown-item" href="/turnos/hoy"> <i class="fa-solid fa-eye"></i> Ver
+											turnos</a></li>
+									<li><a class="dropdown-item" href="/turnos/listar/atendidos"> <i
+												class="fa-solid fa-clipboard-list"></i> Turnos atendidos</a></li>
+									<li><a class="dropdown-item" href="/turnos/sala"> <i
+												class="fa-solid fa-desktop"></i> Sala de espera</a></li>
+									<li><a class="dropdown-item" href="/turnos/cancelar"> <i
+												class="fa-solid fa-xmark-circle"></i> Cancelar turno</a></li>
+									<li><a class="dropdown-item" href="/turnos/registrar"> <i
+												class="fa-solid fa-plus-circle"></i> Registrar turno</a></li>
+								</ul>
+							</li>
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+									aria-expanded="false">
+									<i class="fa-solid fa-gear"></i> Configuración
+								</a>
+								<ul class="dropdown-menu dropdown-menu-dark">
+									<li><a class="dropdown-item" href="/reportes/subir"><i
+												class="fa-solid fa-upload"></i> Subir reportes de hoy</a></li>
+									<li><a class="dropdown-item" href="/reportes/descargar"><i
+												class="fa-solid fa-download"></i> Descargar reportes de hoy</a></li>
+									<li><a class="dropdown-item" href="/agenda/cambiar"><i class="fa-solid fa-book"></i>
+											Cambiar agenda</a></li>
+									<li><a class="dropdown-item" href="/subir_video"><i class="fa-solid fa-video"></i>
+											Gestor de contenido</a></li>
+									<li><a class="dropdown-item" href="/tiempos_atención"><i class="fa-regular fa-clock"></i>
+											Tiempos de atención</a></li>
+									<li><a class="dropdown-item" href="/cambiarClave"><i
+												class="fa-solid fa-unlock-keyhole"></i> Cambiar contraseña</a></li>
+									<li><a class="dropdown-item" href="/cerrar"><i
+												class="fa-solid fa-right-from-bracket"></i> Cerrar Session</a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</nav>
+	</header>
+
+	<main>
+		{%with messages = get_flashed_messages()%}
+		{%if messages%}
+		{%for i in messages%}
+		<div class="position-fixed bg-light" style="z-index: 100;">
+			<div class="alert alert-info" id="alerta" role="alert">
+				{{i}}
+			</div>
+		</div>
+		<script>
+			const alerta = document.getElementById('alerta');
+
+			alerta.addEventListener('click', function () {
+				alerta.style = "transition: all ease 2s"
+				alerta.style.marginTop = "-1000px";
+			})
+		</script>
+		{%endfor%}
+		{%endif%}
+		{%endwith%}
+
+		{%block body%}
+		{%endblock%}
+	</main>
+</body>
+
+</html>

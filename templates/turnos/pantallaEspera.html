@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
+    <script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
+    <script src="{{url_for('static', filename='js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{url_for('static', filename='js/bootstrap.esm.min.js')}}"></script>
+    <script src="{{url_for('static', filename='icons/js/all.min.js')}}"></script>
+    <title>Sala de espera</title>
+</head>
+
+<body class="bg-white row">
+    <div class="col pt-5 indigo text-center cola rounded shadow">
+    </div>
+    <div class="col-9 d-flex justify-content-center align-items-center m-5 indigo rounded shadow">
+        <video class="video" controls width="90%" height="60%"></video>
+    </div>
+</body>
+
+<script>
+    setInterval(function () {
+        fetch('/api/sala')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.turnos.length);
+
+                const cola = document.querySelector('.cola');
+                cola.innerHTML = '';
+
+                if (data.turnos.length > 0) {
+
+                    data.turnos.forEach(element => {
+                        const nuevaFila = document.createElement('div');
+                        nuevaFila.setAttribute('class', 'row mb-3 d-flex justify-content-center align-items-center')
+
+                        const card = document.createElement('div');
+                        card.setAttribute('class', 'card shadow rounded')
+                        card.style.width = '18rem';
+
+                        const cardImg = document.createElement('div');
+                        cardImg.setAttribute('class', 'card-img-top cabecera')
+                        cardImg.innerHTML = '<h2>' + element.codigo + '</h2>';
+                        card.appendChild(cardImg);
+
+                        const textContent = document.createElement('div');
+                        textContent.innerHTML = "<p class='card-text'>" + element.texto + "</p>"
+
+                        card.appendChild(textContent);
+                        nuevaFila.appendChild(card);
+
+                        cola.appendChild(nuevaFila);
+                    });
+                }
+                else {
+                    const nuevaFila = document.createElement('div');
+                    nuevaFila.setAttribute('class', 'cabecera');
+                    nuevaFila.innerHTML = 'SIN REGISTROS';
+                }
+            })
+    }, 5000);
+
+    const video = document.querySelector(".video");
+    var videos = []
+    fetch('/api/videos')
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            videos = data.videos;
+            video.setAttribute('src', '/'+videos[0].src);
+
+        })
+
+    let index = 0;
+
+
+    video.addEventListener("ended", () => {
+        index++;
+
+        if (index >= videos.length) {
+            index = 0;
+        }
+
+        video.setAttribute("src", '/'+videos[index].src);
+        video.play();
+    });
+</script>
+
+</html>

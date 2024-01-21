@@ -1,0 +1,38 @@
+{% extends 'plantilla.html' %}
+{%block body%}
+<section class="bg-light">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>N° turno</th>
+                <th>Paciente</th>
+                <th>Motivo</th>
+                <th>Asiste</th>
+                <th class="text-center">Cambiar asistencia</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%for turno in turnos%}
+            <tr
+            {%if turno.asiste == 'Asistió'%}
+            class="table-success"
+            {%else%}
+            class="table-danger"
+            {%endif%}
+            >
+                <td>{{turno.id}}</td>
+                <td>{{turno.paciente}}</td>
+                <td>{{turno.motivo}}</td>
+                <td>{{turno.asiste}}</td>
+                <td class="text-center">
+                    <a href="/turnos/cambiar/asistencia/{{turno.id}}">
+                        <i class="fa-solid fa-rotate"></i>
+                    </a>
+                </td>
+            </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+
+</section>
+{%endblock%}

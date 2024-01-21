@@ -1,0 +1,32 @@
+{% extends 'plantilla.html'%}
+
+{%block body%}
+<div class="container bg-white">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col" class="col-1">ID</th>
+                <th scope="col" class="col-3">Nombre de familia</th>
+                <th scope="col" class="col-2">Colonia</th>
+                <th scope="col" class="col-2">Dirección</th>
+                <th scope="col" class="col-3">Voluntario</th>
+                <th scope="col" class="col-1 text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%for familia in familias%}
+            <tr>
+                <td>{{familia.id}}</td>
+                <td>{{familia.nombre}}</td>
+                <td>{{familia.colonia}}</td>
+                <td>{{familia.direccion}}</td>
+                <td>{{session.get(Voluntario, familia.voluntario)}}</td>
+                <td class="text-center">
+                    <!--<a href="/familias/eliminar/{{familia.id}}"><i class="fa-solid fa-trash"></i></a>-->
+                    <a href="/familias/ver/{{familia.id}}"><i class="fa-solid fa-eye text-primary"></i></a>
+            </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+</div>
+{%endblock%}

@@ -1,0 +1,87 @@
+{% extends 'plantilla.html'%}
+
+{%block body%}
+<div class="container-sm shadow rounded bg-white text-center">
+    <h2>Agendamiento de citas</h2>
+    <form action="/turnos/registrar" method="post">
+        <div class="form mb-3 text-center">
+            <label>Fecha</label>
+            <input type="date" name="fecha" id="fecha" class="form-control" min="{{fechaMin}}" max="{{fechaMax}}">
+        </div>
+        <div class="form text-center mb-3">
+            <label>Hora</label>
+            <select name="hora" class="form-control" id="hora" disabled required>
+                <option selected disabled>-- Seleccione una fecha --</option>
+            </select>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" placeholder="x" name="localidad">
+            <label>Localidad</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" placeholder="x" name="paciente">
+            <label>Paciente</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="number" class="form-control" name="edad" placeholder="x">
+            <label>Edad (años)</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" name="deriva" placeholder="x">
+            <label>Quien deriva</label>
+        </div>
+        <div class="form mb-3 text-center">
+            <label>Motivo</label>
+            <select name="motivo" class="form-control" required>
+                <option selected disabled>Sin Asignar</option>
+                <option value="Paciente sano">Paciente sano</option>
+                <option value="Crónico">Crónico</option>
+                <option value="Embarazo">Embarazo</option>
+                <option value="Puerpera">Puerpera</option>
+                <option value="Salud ginecológica">Salud ginecológica</option>
+                <option value="Consulta general">Consulta general</option>
+                <option value="Nutricional">Nutricional</option>
+            </select>
+        </div>
+        <div class="form text-start">
+            <h2>SUBSECUENTE Ó PRIMERA VEZ</h2>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" value="Primera vez" id="defaultCheck1" name="veces">
+                <label class="form-check-label" for="defaultCheck1">
+                    Primera vez
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" value="Subsecuente" id="defaultCheck2" name="veces">
+                <label class="form-check-label" for="defaultCheck2">
+                    Subsecuente
+                </label>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success mb-3"><i class="fa-solid fa-book"></i> Agendar</button>
+        <button type="reset" class="btn btn-danger mb-3"><i class="fa-solid fa-xmark-circle"></i> Cancelar</button>
+    </form>
+</div>
+
+<script>
+    const fecha = document.querySelector('#fecha');
+
+    fecha.addEventListener('change', function () {
+        fetch('/api/consultar/horario/' + fecha.value)
+            .then(response => response.json())
+            .then(data => {
+                const hora = document.querySelector('#hora');
+
+                hora.disabled = false;
+                hora.innerHTML = '<option selected disabled>-- Seleccione una fecha --</option>';
+
+                data.horas.forEach(element => {
+                    const nuevaHora = document.createElement('option');
+                    nuevaHora.value = element;
+                    nuevaHora.innerHTML = element;
+                    hora.appendChild(nuevaHora);
+                });
+            })
+    })
+</script>
+{%endblock%}
