@@ -10,6 +10,7 @@ apis = Blueprint('apis', __name__, url_prefix='/api')
 @apis.route('/consultar/horario/<string:fecha>')
 def consularHorario(fecha):
     intervalo = session.query(DiaTrabajo).filter(DiaTrabajo.fecha == fecha).first()
+    print(intervalo)
     if intervalo != None:
         horasNoValdasObj = session.query(Turno).filter(Turno.fecha == fecha).all()
         horasNoValidas = []

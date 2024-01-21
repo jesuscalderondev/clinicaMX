@@ -18,19 +18,15 @@ Bootstrap(app)
 CORS(app, origins=['*'], supports_credentials=True)
 
 #programador.add_job(saludar, 'cron', hour=20, minute=50, second=45, args=['holaaa'])
+
 def agendar():
     try:
-        nuevaAgenda = DiaTrabajo(date.today(), 15, '8:00', '15:30')
+        nuevaAgenda = DiaTrabajo(datetime.strftime(date.today(), '%Y-%m-%d'), 15, '8:00', '15:30')
         session.add(nuevaAgenda)
         session.commit()
     except Exception as e:
         print("Error: ", e)
         session.rollback()
-        
-
-programador.add_job(agendar, 'cron', hour=0, minute=0)
-
-
 
 @app.route('/')
 def index():
@@ -125,7 +121,7 @@ def cambiarAgenda():
 
             nuevo = session.query(DiaTrabajo).filter(DiaTrabajo.fecha == fecha).first()
 
-            turnos = session.query(Turno).filter(Turno.fecha == fecha).all()
+            #turnos = session.query(Turno).filter(Turno.fecha == fecha).all()
 
             if nuevo != None:
                 nuevo.inicio = datetime.strptime(inicio, "%H:%M").time()
@@ -159,8 +155,9 @@ from apis import apis
 app.register_blueprint(apis)
 
 if __name__ == '__main__':
-    agendar()
     load_dotenv()
     Base.metadata.create_all(engine)
+    agendar()
     programador.start()
+    programador.add_job(agendar, 'cron', hour=0, minute=0)
     app.run(debug=True, host='0.0.0.0')
