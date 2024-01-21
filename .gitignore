@@ -1,8 +1,5 @@
 /__pycache__
 /env
 .env
-/static/css
-/static/js
-/static/icons
-/static/Bungee_Spice
+
 database.db
