@@ -11,8 +11,6 @@ from database import *
 from functions import *
 
 app = Flask(__name__)
-
-load_dotenv()
 app.secret_key = getenv('SECRET_KEY')
 
 CORS(app, origins=['*'], supports_credentials=True)
@@ -158,7 +156,7 @@ from apis import apis
 app.register_blueprint(apis)
 
 if __name__ == '__main__':
-    programador.start()
     load_dotenv()
     Base.metadata.create_all(engine)
+    programador.start()
     app.run(debug=True, port=getenv('PORT'))
