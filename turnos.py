@@ -1,6 +1,5 @@
 from flask import render_template, Blueprint, redirect, request, flash
 from datetime import date, timedelta, time, timezone
-from flask_bootstrap import Bootstrap
 
 
 from database import *

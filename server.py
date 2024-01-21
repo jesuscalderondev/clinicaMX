@@ -4,7 +4,6 @@ from flask_cors import CORS
 from os import getenv
 from dotenv import load_dotenv
 from datetime import timedelta
-from flask_bootstrap import Bootstrap
 from werkzeug.utils import secure_filename
 import os
 
