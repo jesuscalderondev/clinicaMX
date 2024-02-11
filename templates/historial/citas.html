@@ -1,0 +1,86 @@
+{% extends 'plantilla.html' %}
+{%block body%}
+<section class="bg-light">
+    <div class="row mb-3">
+        <div class="d-flex">
+            <input class="form-control me-2" id="filtrado" type="search" placeholder="Buscar..." aria-label="Search">
+            <button class="btn btn-primary" id="buscar"><i class="fa-solid fa-search"></i></button>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <table class="table table-bordered border-black">
+            <thead>
+                <tr>
+                    <th scope="col" class="col-2">Nombre del jefe de familia</th>
+                    <th scope="col" class="col-2">Nombre del paciente</th>
+                    <th scope="col" class="col-2">Fecha de nacimiento</th>
+                    <th scope="col" class="col">Hora de cita</th>
+                    <th scope="col" class="col">Procedencia</th>
+                    <th scope="col" class="col">Volante de derivación</th>
+                    <th scope="col" class="col">1A VEZ</th>
+                    <th scope="col" class="col">SUB</th>
+                    <th scope="col" class="col">Agendado</th>
+                    <th scope="col" class="col">Reagendado</th>
+                    <th scope="col" class="col">Espontaneo</th>
+                    <th scope="col" class="col">Asistió</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for cita in citas%}
+                <tr>
+                    <td>{{cita.deriva}}</td>
+                    <td>{{cita.paciente}}</td>
+                    <td>{{cita.fechaNacimiento}}</td>
+                    <td>{{cita.hora}}</td>
+                    <td>{{cita.procedencia}}</td>
+                    <td>{{cita.id}}</td>
+                    <td class="text-center">
+                        {%if cita.veces == 'Primera vez'%}
+                        <i class="fa-solid fa-check text-success"></i>
+                        {%else%}
+                        <i class="fa-solid fa-xmark text-danger"></i>
+                        {%endif%}
+                    </td>
+                    <td class="text-center">
+                        {%if cita.veces == 'Subsecuente'%}
+                        <i class="fa-solid fa-checked text-success"></i>
+                        {%else%}
+                        <i class="fa-solid fa-xmark text-danger"></i>
+                        {%endif%}
+                    </td>
+                    <td class="text-center">
+                        {%if cita.condicion == 'Agendado'%}
+                        <i class="fa-solid fa-check text-success"></i>
+                        {%else%}
+                        <i class="fa-solid fa-xmark text-danger"></i>
+                        {%endif%}
+                    </td>
+                    <td class="text-center">
+                        {%if cita.condicion == 'Reagendado'%}
+                        <i class="fa-solid fa-checked text-success"></i>
+                        {%else%}
+                        <i class="fa-solid fa-xmark text-danger"></i>
+                        {%endif%}
+                    </td>
+                    <td class="text-center">
+                        {%if cita.espontaneo == True%}
+                        <i class="fa-solid fa-check text-success"></i>
+                        {%else%}
+                        <i class="fa-solid fa-xmark text-danger"></i>
+                        {%endif%}
+                    </td>
+                    <td class="text-center">
+                        {%if cita.asiste == 'Asistió'%}
+                        <i class="fa-solid fa-check text-success"></i>
+                        {%else%}
+                        <i class="fa-solid fa-xmark text-danger"></i>
+                        {%endif%}
+                    </td>
+                </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+    </div>
+</section>
+{%endblock%}

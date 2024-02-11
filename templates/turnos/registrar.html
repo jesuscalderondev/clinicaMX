@@ -22,9 +22,9 @@
             <input type="text" class="form-control" placeholder="x" name="paciente">
             <label>Paciente</label>
         </div>
-        <div class="form-floating mb-3">
-            <input type="number" class="form-control" name="edad" placeholder="x">
-            <label>Edad (años)</label>
+        <div class="form mb-3">
+            <input type="date" class="form-control" name="fechaNacimiento" placeholder="x" max="{{fechaMin}}">
+            <label>Fecha de nacimiento</label>
         </div>
         <div class="form-floating mb-3">
             <input type="text" class="form-control" name="deriva" placeholder="x">

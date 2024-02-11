@@ -68,9 +68,12 @@
 												class="fa-solid fa-download"></i> Descargar reportes de hoy</a></li>
 									<li><a class="dropdown-item" href="/agenda/cambiar"><i class="fa-solid fa-book"></i>
 											Cambiar agenda</a></li>
+									<li><a class="dropdown-item" href="/historial/citas"><i class="fa-solid fa-book-open"></i>
+											Historial de citas</a></li>
 									<li><a class="dropdown-item" href="/subir_video"><i class="fa-solid fa-video"></i>
 											Gestor de contenido</a></li>
-									<li><a class="dropdown-item" href="/tiempos_atención"><i class="fa-regular fa-clock"></i>
+									<li><a class="dropdown-item" href="/tiempos_atención"><i
+												class="fa-regular fa-clock"></i>
 											Tiempos de atención</a></li>
 									<li><a class="dropdown-item" href="/cambiarClave"><i
 												class="fa-solid fa-unlock-keyhole"></i> Cambiar contraseña</a></li>
@@ -89,7 +92,7 @@
 		{%with messages = get_flashed_messages()%}
 		{%if messages%}
 		{%for i in messages%}
-		<div class="position-fixed bg-light" style="z-index: 100;">
+		<div class="position-fixed  bg-light" style="z-index: 100;">
 			<div class="alert alert-info" id="alerta" role="alert">
 				{{i}}
 			</div>

@@ -5,10 +5,11 @@ from sqlalchemy import create_engine
 from os import getenv
 from dotenv import load_dotenv
 from datetime import date, time, datetime
+import psycopg2
 
 from functions import passwordHash
 
-database = f'sqlite:///database.db'
+database = f'postgresql+psycopg2://fl0user:BPYhpWNKS1e4@ep-jolly-pine-a5v5vlj4.us-east-2.aws.neon.fl0.io:5432/database'
 engine = create_engine(database)
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -28,44 +29,6 @@ class Usuario(Base):
         self.nombreUsuario = nombreUsuario
         self.clave = passwordHash(clave)
         self.cargo = cargo
-
-""" class Paciente(Base):
-    __tablename__ = 'pacientes'
-    id = Column(Integer, primary_key=True)
-    nombreCompleto = Column(String(300),nullable=False)
-    fechaNacimineto = Column(Date, nullable=False)
-    noDocumento = Column(String(18), nullable=False)
-    tipoDeDocumento = Column(String(20), nullable=False)
-    
-
-    def __init__(self, nombreCompleto, fechaNacimineto, noDocumento, tipoDeDocumento):
-        self.nombreCompleto = nombreCompleto
-        self.fechaNacimineto = fechaNacimineto
-        self.noDocumento = noDocumento
-        self.tipoDeDocumento = tipoDeDocumento
-
-    def __str__(self):
-        return self.nombreCompleto """
-
-""" class Voluntario(Base):
-    __tablename__ = 'voluntarios'
-    id = Column(Integer, primary_key=True)
-    nombreCompleto = Column(String(300),nullable=False)
-    noDocumento = Column(String(18), nullable=False)
-    tipoDeDocumento = Column(String(20), nullable=False)
-    colonia = Column(String(100), nullable=False)
-    
-
-    def __init__(self, nombreCompleto, noDocumento, tipoDeDocumento, colonia):
-        self.nombreCompleto = nombreCompleto
-        self.noDocumento = noDocumento
-        self.tipoDeDocumento = tipoDeDocumento
-        self.colonia = colonia
-        
-    def __str__(self):
-        return self.nombreCompleto """
-    
-        
         
 class Turno(Base):
     __tablename__ = 'turnos'
@@ -79,17 +42,26 @@ class Turno(Base):
     deriva = Column(String(225), nullable=False)
     veces = Column(String(30), nullable=False)
     asiste = Column(String(20), nullable=False)
+    condicion = Column(String(25), nullable=False)
+    fechaNacimiento = Column(Date, nullable=False)
 
-    def __init__(self, fecha, hora, motivo, paciente, edad, localidad, veces, deriva):
+    def __init__(self, fecha, hora, motivo, paciente, localidad, veces, deriva, fechaNacimiento):
         self.fecha = datetime.strptime(fecha, "%Y-%m-%d")
         self.hora = datetime.strptime(hora, "%H:%M").time()
         self.motivo = motivo
         self.paciente = paciente
-        self.edad = edad
+        self.fechaNacimiento = datetime.strptime(fechaNacimiento, "%Y-%m-%d")
+        self.edad = self.calcularEdad()
         self.localidad = localidad
         self.veces = veces
         self.deriva = deriva
         self.asiste = 'Pendiente'
+        self.condicion = 'Agendado'
+
+    def calcularEdad(self):
+        diferencia = datetime.today() - self.fechaNacimiento
+        edad = diferencia.days / 365.25
+        return round(edad)
         
 class DiaTrabajo(Base):
     __tablename__ = 'diaTrabjo'

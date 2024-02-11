@@ -34,7 +34,7 @@ def consularHorario(fecha):
             inicio = (datetime.now() + timedelta(hours=1)).time().hour
         #Modificar
         if inicio <= 20:
-            horas = crearListaHoras(inicio, 20, intervalo.intervalo, horasNoValidas)
+            horas = crearListaHoras(inicio, 23, intervalo.intervalo, horasNoValidas)
         else:
             horas = []
     else:
@@ -68,3 +68,7 @@ def videos():
         videos.append({'src' : i.ruta})
     
     return jsonify(videos = videos)
+
+def convertirTurnoJson(Cita:Turno):
+    return {'paciente' : Cita.paciente, 'deriva' : Cita.deriva, 'fecha' : f'{Cita.fecha}', 'hora' : f'{Cita.hora}', 'localidad' : Cita.localidad, 'id' : Cita.id}
+
