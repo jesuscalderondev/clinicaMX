@@ -1,0 +1,22 @@
+{% extends 'plantilla.html' %}
+{%block body%}
+<div class="container-sm shadow rounded bg-white text-center">
+    <h2>Registro de voluntario</h2>
+    <form action="/registrarVoluntario" method="post">
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" placeholder="x" name="nombre">
+            <label>Nombre completo</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" placeholder="x" name="localidad">
+            <label>Localidad</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" placeholder="x" name="telegramId">
+            <label>Codigo Telegram</label>
+        </div>
+        <button type="submit" class="btn btn-success mb-3"><i class="fa-solid fa-plus-circle"></i> Registrar</button>
+        <button type="reset" class="btn btn-danger mb-3"><i class="fa-solid fa-xmark-circle"></i> Cancelar</button>
+    </form>
+</div>
+{%endblock%}

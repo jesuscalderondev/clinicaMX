@@ -19,15 +19,12 @@ CORS(app, origins=['*'], supports_credentials=True)
 
 def agendar():
     try:
-        nuevaAgenda = DiaTrabajo(datetime.strftime(datetime.now() + timedelta(days=1), '%Y-%m-%d'), 15, '8:00', '15:30')
+        nuevaAgenda = DiaTrabajo(datetime.strftime(datetime.now(), '%Y-%m-%d'), 15, '8:00', '15:30')
         session.add(nuevaAgenda)
         session.commit()
     except Exception as e:
         print("Error: ", e)
         session.rollback()
-
-agendar()
-programador.add_job(agendar, 'cron', hour=0, minute=0)
 
 @app.route('/')
 def index():
@@ -141,13 +138,34 @@ def cambiarAgenda():
             flash('Ha ocurrido un error a la hora de modificar la fecha')
     return render_template('agenda.html', fechaMin = date.today() + timedelta(days=3))
 
-@requiredSession
+#@requiredSession
 @app.route('/historial/citas')
 def historialCitas():
     historial = session.query(Turno).order_by(Turno.fecha.desc()).all()
     return render_template('/historial/citas.html', citas = historial)
 
+@app.route('/registrarVoluntario', methods = ['POST', 'GET'])
+def registrarVoluntario():
+    if request.method != 'POST':
+        return render_template('registrarVoluntario.html')
     
+    data = request.form
+
+    nombre = data['nombre']
+    localiddad = data['localidad']
+    telegramId = data['telegramId']
+
+    try:
+        nuevoVoluntario = Voluntario(nombre, localiddad, telegramId)
+        session.add(nuevoVoluntario)
+        session.commit()
+        flash("Registro exitoso")
+        return redirect('/registrarVoluntario')
+    except Exception as e:
+        session.rollback()
+        return e
+    
+
 #registro de familias
 
 from familias import familias
@@ -165,4 +183,7 @@ if __name__ == '__main__':
     load_dotenv()
     Base.metadata.create_all(engine)
     programador.start()
+    agendar()
+    programador.add_job(agendar, 'cron', hour=0, minute=0)
+
     app.run(debug=True, port=getenv('PORT'))
