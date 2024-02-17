@@ -11,7 +11,7 @@ from database import *
 from functions import *
 
 app = Flask(__name__)
-app.secret_key = os.environ['SECRET_KEY']
+app.secret_key = getenv('SECRET_KEY')
 
 CORS(app, origins=['*'], supports_credentials=True)
 
@@ -186,4 +186,4 @@ if __name__ == '__main__':
     agendar()
     programador.add_job(agendar, 'cron', hour=0, minute=0)
 
-    app.run(debug=True, port=os.environ['PORT'])
+    app.run(debug=True, port=getenv('PORT'))
