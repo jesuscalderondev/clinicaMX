@@ -63,17 +63,21 @@
             })
     }, 5000);
 
-    const video = document.querySelector(".video");
-    var videos = []
-    fetch('/api/videos')
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            videos = data.videos;
-            video.setAttribute('src', '/'+videos[0].src);
+    try{
+        const video = document.querySelector(".video");
+        var videos = []
+        fetch('/api/videos')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                videos = data.videos;
+                video.setAttribute('src', '/'+videos[0].src);
 
-        })
-
+            })
+    }
+    catch{
+        console.error(error);
+    }
     let index = 0;
 
 

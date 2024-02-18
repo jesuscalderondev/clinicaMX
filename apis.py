@@ -45,7 +45,7 @@ def consularHorario(fecha):
 #@requiredSession
 @apis.route('/sala')
 def consultarTurnoSala():
-    turnosObj = session.query(Turno).filter(Turno.fecha == date.today(), Turno.asiste == 'Pendiente').order_by(Turno.hora.asc()).limit(5)
+    turnosObj = session.query(Turno).filter(Turno.fecha == datetime.now(), Turno.asiste == 'Pendiente').order_by(Turno.hora.asc()).limit(5)
     turnos = []
 
     for turno in turnosObj:
