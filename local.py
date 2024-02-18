@@ -20,7 +20,7 @@ CORS(app, origins=['*'], supports_credentials=True)
 
 def agendar():
     try:
-        nuevaAgenda = DiaTrabajo(datetime.strftime(datetime.now() + timedelta(days=2), '%Y-%m-%d'), 15, '8:00', '15:30')
+        nuevaAgenda = DiaTrabajo(datetime.strftime(datetime.now() + timedelta(days=3), '%Y-%m-%d'), 15, '8:00', '15:30')
         session.add(nuevaAgenda)
         session.commit()
     except Exception as e:
@@ -181,13 +181,12 @@ from apis import apis
 app.register_blueprint(apis)
 
 
-programador.add_job(agendar, 'cron', hour=12, minute=30)
+programador.add_job(agendar, 'cron', hour=12, minute=35)
 
 if __name__ == '__main__':
     load_dotenv()
     zona = pytz.timezone("America/Mexico_City")
     Base.metadata.create_all(engine)
     programador.start()
-    agendar()
 
     app.run(debug=True, port=getenv('PORT'))
