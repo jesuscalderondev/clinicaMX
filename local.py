@@ -180,6 +180,10 @@ app.register_blueprint(turnos)
 from apis import apis
 app.register_blueprint(apis)
 
+def prueba():
+    flash("Si realiza los trabajos")
+
+
 if __name__ == '__main__':
     load_dotenv()
     zona = pytz.timezone("America/Mexico_City")
@@ -187,5 +191,6 @@ if __name__ == '__main__':
     programador.start()
     agendar()
     programador.add_job(agendar, 'cron', hour=0, minute=0)
+    programador.add_job(prueba, 'cron', hour=11, minute=57)
 
     app.run(debug=True, port=getenv('PORT'))
