@@ -20,7 +20,7 @@ CORS(app, origins=['*'], supports_credentials=True)
 
 def agendar():
     try:
-        nuevaAgenda = DiaTrabajo(datetime.strftime(datetime.now() + timedelta(days=1), '%Y-%m-%d'), 15, '8:00', '15:30')
+        nuevaAgenda = DiaTrabajo(datetime.strftime(datetime.now() + timedelta(days=2), '%Y-%m-%d'), 15, '8:00', '15:30')
         session.add(nuevaAgenda)
         session.commit()
     except Exception as e:
@@ -180,11 +180,8 @@ app.register_blueprint(turnos)
 from apis import apis
 app.register_blueprint(apis)
 
-def prueba():
-    print("Si realiza los trabajos")
 
 programador.add_job(agendar, 'cron', hour=12, minute=30)
-programador.add_job(prueba, 'cron', hour=12, minute=15)
 
 if __name__ == '__main__':
     load_dotenv()
