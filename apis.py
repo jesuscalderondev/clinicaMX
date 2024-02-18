@@ -56,7 +56,7 @@ def consultarTurnoSala():
                     'texto' : f'{turno.paciente}'
                 })
         
-        return jsonify(turnos = turnos)
+        return jsonify(turnos = turnos, mensaje = 'joaaa')
     except Exception as e:
         return jsonify(turnos = [], error = f'{e}')
 
