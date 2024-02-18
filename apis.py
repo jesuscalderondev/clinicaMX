@@ -45,17 +45,20 @@ def consularHorario(fecha):
 #@requiredSession
 @apis.route('/sala')
 def consultarTurnoSala():
-    turnosObj = session.query(Turno).filter(Turno.fecha == datetime.now(), Turno.asiste == 'Pendiente').order_by(Turno.hora.asc()).limit(5)
-    turnos = []
+    try:
+        turnosObj = session.query(Turno).filter(Turno.fecha == datetime.now(), Turno.asiste == 'Pendiente').order_by(Turno.hora.asc()).limit(5)
+        turnos = []
 
-    for turno in turnosObj:
-        if turno != None:
-            turnos.append({
-                'codigo' : f'C1-{turno.id}',
-                'texto' : f'{turno.paciente}'
-            })
-    
-    return jsonify(turnos = turnos)
+        for turno in turnosObj:
+            if turno != None:
+                turnos.append({
+                    'codigo' : f'C1-{turno.id}',
+                    'texto' : f'{turno.paciente}'
+                })
+        
+        return jsonify(turnos = turnos)
+    except Exception as e:
+        return jsonify(turnos = [], error = f'{e}')
 
 
 #@requiredSession

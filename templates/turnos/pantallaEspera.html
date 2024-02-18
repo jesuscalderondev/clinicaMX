@@ -26,7 +26,7 @@
         fetch('/api/sala')
             .then(response => response.json())
             .then(data => {
-                console.log(data.turnos.length);
+                console.log(data);
 
                 const cola = document.querySelector('.cola');
                 cola.innerHTML = '';
@@ -73,24 +73,24 @@
                 videos = data.videos;
                 video.setAttribute('src', '/'+videos[0].src);
 
+                let index = 0;
+
+
+                video.addEventListener("ended", () => {
+                    index++;
+
+                    if (index >= videos.length) {
+                        index = 0;
+                    }
+
+                    video.setAttribute("src", '/'+videos[index].src);
+                    video.play();
+                });
             })
     }
     catch{
         console.error(error);
     }
-    let index = 0;
-
-
-    video.addEventListener("ended", () => {
-        index++;
-
-        if (index >= videos.length) {
-            index = 0;
-        }
-
-        video.setAttribute("src", '/'+videos[index].src);
-        video.play();
-    });
 </script>
 
 </html>
