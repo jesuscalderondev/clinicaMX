@@ -1,9 +1,8 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import session as cookies
-from apscheduler.schedulers.background import BackgroundScheduler
 import requests
 
-programador = BackgroundScheduler()
+
 
 def passwordHash(password:str):
     return generate_password_hash(password)

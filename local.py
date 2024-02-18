@@ -7,9 +7,12 @@ from datetime import timedelta, timezone
 from werkzeug.utils import secure_filename
 import os
 import pytz
+from apscheduler.schedulers.background import BackgroundScheduler
 
 from database import *
 from functions import *
+
+programador = BackgroundScheduler()
 
 app = Flask(__name__)
 app.secret_key = getenv('SECRET_KEY')
@@ -181,7 +184,8 @@ from apis import apis
 app.register_blueprint(apis)
 
 
-programador.add_job(agendar, 'cron', hour=12, minute=40)
+programador.add_job(agendar, 'cron', hour=13, minute=10)
+programador.add_job(agendar, 'cron', hour=14, minute=10)
 
 if __name__ == '__main__':
     load_dotenv()
