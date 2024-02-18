@@ -47,6 +47,7 @@ def consularHorario(fecha):
 def consultarTurnoSala():
     try:
         turnosObj = session.query(Turno).filter(Turno.fecha == datetime.now(), Turno.asiste == 'Pendiente').order_by(Turno.hora).limit(5)
+        print(turnosObj)
         turnos = []
 
         for turno in turnosObj:
