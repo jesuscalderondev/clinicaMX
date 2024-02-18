@@ -3,9 +3,10 @@ from flask import session as cookies
 from flask_cors import CORS
 from os import getenv
 from dotenv import load_dotenv
-from datetime import timedelta
+from datetime import timedelta, timezone
 from werkzeug.utils import secure_filename
 import os
+import pytz
 
 from database import *
 from functions import *
@@ -59,7 +60,7 @@ def login():
 #@requiredSession
 @app.route('/home')
 def home():
-        return render_template('inicio.html')
+        return render_template('inicio.html', fecha = datetime.now())
 
 #@requiredSession
 @app.route("/subir_video", methods=["POST", "GET"])
@@ -181,6 +182,7 @@ app.register_blueprint(apis)
 
 if __name__ == '__main__':
     load_dotenv()
+    zona = pytz.timezone("America/Mexico_City")
     Base.metadata.create_all(engine)
     programador.start()
     agendar()

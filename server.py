@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from datetime import timedelta
 from werkzeug.utils import secure_filename
 import os
+import time
 
 from database import *
 from functions import *
@@ -181,6 +182,7 @@ app.register_blueprint(apis)
 
 if __name__ == '__main__':
     load_dotenv()
+    time.tzset()
     Base.metadata.create_all(engine)
     programador.start()
     agendar()
