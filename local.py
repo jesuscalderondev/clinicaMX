@@ -184,8 +184,9 @@ from apis import apis
 app.register_blueprint(apis)
 
 
-programador.add_job(agendar, 'cron', hour=13, minute=10)
-programador.add_job(agendar, 'cron', hour=14, minute=10)
+programador.add_job(agendar, 'cron', hour=8, minute=50)
+programador.add_job(agendar, 'cron', hour=9, minute=50)
+
 
 if __name__ == '__main__':
     load_dotenv()
