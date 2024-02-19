@@ -11,7 +11,7 @@ apis = Blueprint('apis', __name__, url_prefix='/api')
 def consularHorario(fecha):
     intervalo = session.query(DiaTrabajo).filter(DiaTrabajo.fecha == fecha).first()
     if intervalo != None:
-        horasNoValdasObj = session.query(Turno).filter(Turno.fecha == fecha, Turno.paciente != "Sin definir").all()
+        horasNoValdasObj = session.query(Turno).filter(Turno.fecha == formatearFecha(fecha), Turno.paciente != "Sin definir").all()
         horasNoValidas = []
         for i in horasNoValdasObj:
             hora = f"{i.hora.hour:02}:{i.hora.minute:02}"

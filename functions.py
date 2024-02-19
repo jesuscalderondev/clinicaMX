@@ -1,7 +1,7 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import session as cookies
 import requests
-
+from datetime import datetime
 
 
 def passwordHash(password:str):
@@ -57,3 +57,13 @@ def obtenerHoraCita(fecha:str):
         print("Error en el segundo")
         print(e)
         return None
+
+def formatearFecha(fechaStr):
+    formatos = ["%Y/%m/%d", "%Y-%m-%d", "%d/%m/%Y", "%d-%m-%Y"]
+    for formato in formatos:
+        try:
+            fecha = datetime.strptime(fechaStr, formato)
+            return fecha
+        except:
+            pass
+    
