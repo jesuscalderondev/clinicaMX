@@ -22,23 +22,22 @@ CORS(app, origins=['*'], supports_credentials=True)
 #programador.add_job(saludar, 'cron', hour=20, minute=50, second=45, args=['holaaa'])
 
 def agendar():
-    try:
-        nuevaAgenda = DiaTrabajo(datetime.strftime(datetime.now() + timedelta(days=4), '%Y-%m-%d'), 15, '8:00', '15:30')
-        session.add(nuevaAgenda)
-        session.commit()
-    except Exception as e:
-        print("Error: ", e)
-        session.rollback()
+    for i in range(7):
+        try:
+            nuevaAgenda = DiaTrabajo(datetime.strftime(datetime.now() + timedelta(days=i), '%Y-%m-%d'), 15, '8:00', '15:30')
+            session.add(nuevaAgenda)
+            session.commit()
+        except Exception as e:
+            print("Error: ", e)
+            session.rollback()
 
 @app.route('/')
 def index():
+    agendar()
     if 'token' in cookies:
         return redirect('/home')
     return render_template('login.html')
 
-@app.route('/web')
-def pruebas():
-    return render_template('prueba.html')
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -63,6 +62,7 @@ def login():
 #@requiredSession
 @app.route('/home')
 def home():
+        agendar
         return render_template('inicio.html', fecha = datetime.now())
 
 #@requiredSession
