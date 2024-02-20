@@ -62,7 +62,7 @@ def login():
 #@requiredSession
 @app.route('/home')
 def home():
-        agendar
+        agendar()
         return render_template('inicio.html', fecha = datetime.now())
 
 #@requiredSession
