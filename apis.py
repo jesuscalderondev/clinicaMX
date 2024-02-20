@@ -13,6 +13,8 @@ def consularHorario(fecha):
     if intervalo != None:
         #haciendo pruebas aquí
         horasNoValdasObj = session.query(Turno).filter(Turno.fecha == formatearFecha(fecha), Turno.paciente != "Sin definir").all()
+        print(horasNoValdasObj)
+
         horasNoValidas = []
         for i in horasNoValdasObj:
             hora = f"{i.hora.hour:02}:{i.hora.minute:02}"
