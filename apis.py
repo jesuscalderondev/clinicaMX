@@ -13,6 +13,7 @@ def consularHorario(fecha):
     if intervalo != None:
         #haciendo pruebas aquí
         horasNoValdasObj = session.query(Turno).filter(Turno.fecha == formatearFecha(fecha), Turno.paciente != "Sin definir").all()
+        print('Joa')
         print(horasNoValdasObj)
 
         horasNoValidas = []
