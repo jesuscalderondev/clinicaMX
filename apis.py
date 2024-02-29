@@ -80,3 +80,47 @@ def videos():
 def convertirTurnoJson(Cita:Turno):
     return {'paciente' : Cita.paciente, 'deriva' : Cita.deriva, 'fecha' : f'{Cita.fecha}', 'hora' : f'{Cita.hora}', 'localidad' : Cita.localidad, 'id' : Cita.id}
 
+@apis.route('/filtrado/historial', methods=['POST'])
+def filtradoDeBusqueda():
+
+    if request.method == 'POST':
+
+        query = select(Turno)
+
+        
+        data = request.get_json()
+        
+        if 'nombre' in data:
+            query = query.where(Turno.paciente.like(f"%{data['nombre']}%"))
+        
+        if 'motivo' in data:
+            query = query.where(Turno.motivo.like(f"%{data['motivo']}%"))
+        
+        if 'procedencia' in data:
+            query = query.where(Turno.localidad.like(f"%{data['procedencia']}%"))
+        
+        consulta = session.execute(query)
+        resultado = consulta.fetchall()
+        citas = []
+
+        for cita in resultado:
+            cita = cita[0]
+            citas.append({
+                "paciente" : cita.paciente,
+                "deriva" : cita.deriva,
+                "fechaNaciemiento" : cita.fechaNacimiento,
+                "fecha" : cita.fecha,
+                "hora" : str(cita.hora)[:5],
+                "localidad" : cita.localidad,
+                "id" : cita.id,
+                "primeraVez" : cita.veces,
+                "condicion" : cita.condicion,
+                "asiste" : cita.asiste,
+                "motivo" : cita.motivo
+            })
+        
+        try:
+            return jsonify(citas = citas), 200
+        except Exception as e:
+            return jsonify(error = f'{e}'), 401
+    return jsonify(error = "El tipo de petición no es la adecuada")

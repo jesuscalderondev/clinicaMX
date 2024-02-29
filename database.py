@@ -6,6 +6,7 @@ from os import getenv
 from dotenv import load_dotenv
 from datetime import date, time, datetime
 import psycopg2
+from sqlalchemy import select
 
 from functions import passwordHash
 
