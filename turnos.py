@@ -24,6 +24,7 @@ def registrarTurno():
             localidad = data['localidad']
 
             nuevoTurno = Turno(fecha, hora, motivo, paciente, localidad, veces, deriva, fechaNacimineto)
+            nuevoTurno.condicion = "Espontaneo"
             session.add(nuevoTurno)
             session.commit()
             flash(f'Turno registrado de manera exitosa, codigo de turno {nuevoTurno.id}')

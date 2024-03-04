@@ -24,7 +24,7 @@ CORS(app, origins=['*'], supports_credentials=True)
 def agendar():
     for i in range(7):
         try:
-            nuevaAgenda = DiaTrabajo(datetime.strftime(datetime.now() + timedelta(days=i), '%Y-%m-%d'), 15, '8:00', '15:30')
+            nuevaAgenda = DiaTrabajo(datetime.strftime(datetime.now() + timedelta(days=i), '%Y-%m-%d'), 15, '8:30', '13:30')
             session.add(nuevaAgenda)
             session.commit()
         except Exception as e:
@@ -116,21 +116,29 @@ def cambiarAgenda():
         try:
             data = request.form
 
+            print(data)
+
             fecha = data['fecha']
             inicio = data['inicio']
             fin = data['fin']
             intervalo = data['intervalo']
 
+            laborable = 'laborable' not in data
+
             nuevo = session.query(DiaTrabajo).filter(DiaTrabajo.fecha == fecha).first()
 
-            #turnos = session.query(Turno).filter(Turno.fecha == fecha).all()
-
             if nuevo != None:
-                nuevo.inicio = datetime.strptime(inicio, "%H:%M").time()
-                nuevo.fin = datetime.strptime(fin, "%H:%M").time()
-                nuevo.intervalo = intervalo
+                if laborable and inicio != "" and fin != "" and intervalo != "":
+                    nuevo.inicio = datetime.strptime(inicio, "%H:%M").time()
+                    nuevo.fin = datetime.strptime(fin, "%H:%M").time()
+                    nuevo.intervalo = intervalo
+                nuevo.laborable = laborable
             else:
-                nuevo = DiaTrabajo(fecha, intervalo, inicio, fin)
+                if laborable:
+                    nuevo = DiaTrabajo(fecha, intervalo, inicio, fin)
+                else:
+                    nuevo = DiaTrabajo(fecha, 15, datetime.now().time(), datetime.now().time())
+                nuevo.laborable = laborable
             
             session.add(nuevo)
             session.commit()
@@ -138,6 +146,7 @@ def cambiarAgenda():
             flash('Se ha actualizado de manera correcta la fecha para trabajo')
         except Exception as e:
             flash(e)
+            print(e)
             session.rollback()
             flash('Ha ocurrido un error a la hora de modificar la fecha')
     return render_template('agenda.html', fechaMin = date.today() + timedelta(days=3))
@@ -145,13 +154,13 @@ def cambiarAgenda():
 #@requiredSession
 @app.route('/historial/citas')
 def historialCitas():
-    historial = session.query(Turno).order_by(Turno.fecha.desc()).all()
+    historial = session.query(Turno).filter(Turno.localidad != "Sin localidad", Turno.asiste != "Pendiente").order_by(Turno.fecha.desc()).all()
     return render_template('/historial/citas.html', citas = historial)
 
 @app.route('/registrarVoluntario', methods = ['POST', 'GET'])
 def registrarVoluntario():
     if request.method != 'POST':
-        return render_template('registrarVoluntario.html')
+        return render_template('registrarVoluntario.html', voluntarios = session.query(Voluntario).all())
     
     data = request.form
 
@@ -168,6 +177,19 @@ def registrarVoluntario():
     except Exception as e:
         session.rollback()
         return e
+    
+@app.route('/eliminarVoluntario/<int:id>')
+def eliminarVoluntario(id):
+    voluntario = session.get(Voluntario, id)
+
+    if voluntario != None:
+        try:
+            session.delete(voluntario)
+            session.commit()
+        except:
+            session.rollback()
+    
+    return redirect('/registrarVoluntario')
     
 
 #registro de familias

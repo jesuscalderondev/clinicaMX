@@ -2,20 +2,11 @@
 {%block body%}
 <section class="bg-light">
     <div class="row mb-3">
-        <h2>BUSQUEDA GENERAL</h2>
-        <div class="d-flex">
-
-            <input class="form-control me-2" id="filtrado" type="search" placeholder="Buscar..." aria-label="Search">
-            <button class="btn btn-primary" id="buscar"><i class="fa-solid fa-search"></i></button>
-        </div>
-        <hr class="mt-3">
-        <h2>BUSQUEDA ESPECIALIZADA</h2>
-        <hr>
         <div class="row">
             <div class="form-group col-4">
                 <labe>Nombre Completo</label>
-                <input class="form-control form-control-sm" type="text" placeholder="Ejemplo: Juanito Perez"
-                    aria-label=".form-control-sm example" id="nombre">
+                    <input class="form-control form-control-sm" type="text" placeholder="Ejemplo: Juanito Perez"
+                        aria-label=".form-control-sm example" id="nombre">
             </div>
             <div class="form-group col-4">
                 <label>Motivo</label>
@@ -23,13 +14,26 @@
             </div>
             <div class="form-group col-4">
                 <label>Procedencia</label>
-                <input type="text" class="form-control form-control-sm" placeholder="Ejemplo: embarazo" id="">
+                <input type="text" class="form-control form-control-sm" placeholder="Ejemplo: embarazo"
+                    id="procedencia">
             </div>
+        </div>
+        <div class="row mt-3">
+            <div class="form-group col-4">
+                <label for="calendario">Fecha</label>
+                <input type="date" id="calendario" class="form-control">
+            </div>
+        </div>
+        <div class="text-start mt-3">
+            <button type="submit" class="btn btn-primary" id="buscar"><i class="fa fa-solid fa-search"></i>
+                Filtrar</button>
+            <button type="submit" class="btn btn-success" id="excel"><i class="fa fa-solid fa-download"></i> Descargar
+                en excel</button>
         </div>
     </div>
 
-    <div class="row mb-3 scrollx">
-        <table class="table table-bordered border-black">
+    <div class="row mb-3">
+        <table class="table table-bordered border-black" id="registros">
             <thead>
                 <tr>
                     <th scope="col" class="col-2">Nombre del jefe de familia</th>
@@ -86,7 +90,7 @@
                         {%endif%}
                     </td>
                     <td class="text-center">
-                        {%if cita.espontaneo == True%}
+                        {%if cita.condicion == 'Espontaneo'%}
                         <i class="fa-solid fa-check text-success"></i>
                         {%else%}
                         <i class="fa-solid fa-xmark text-danger"></i>
@@ -105,4 +109,189 @@
         </table>
     </div>
 </section>
+
+<script>
+
+    function filtrar() {
+        var jsonData = {};
+
+
+        let nombre = document.getElementById("nombre").value;
+        let procedencia = document.getElementById("procedencia").value;
+        let motivo = document.getElementById("motivo").value;
+        let fecha = document.getElementById("calendario").value;
+
+        if (nombre != "") {
+            jsonData["nombre"] = nombre;
+        }
+
+        if (procedencia != "") {
+            jsonData["procedencia"] = procedencia;
+        }
+
+        if (motivo != "") {
+            jsonData["motivo"] = motivo;
+        }
+
+        if (fecha != "") {
+            jsonData["fecha"] = fecha;
+        }
+
+        console.log(fecha == "")
+
+        return jsonData;
+    }
+
+    var parametroActual = {};
+
+    var boton = document.getElementById("buscar");
+
+    boton.addEventListener("click", function () {
+        var jsonData = filtrar();
+        parametroActual = jsonData;
+
+        var check = "<i class='fa-solid fa-check text-success'></i>";
+        var xmark = "<i class='fa-solid fa-xmark text-danger'></i>";
+
+
+        console.log(jsonData);
+
+        fetch('/api/filtrado/historial', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jsonData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+
+                var tabla = document.getElementById("registros");
+                var filas = tabla.getElementsByTagName("tr");
+
+                // Verifica si hay más de una fila (excluye la fila de encabezado)
+                for (var i = filas.length - 1; i > 0; i--) {
+                    tabla.deleteRow(i);
+                }
+
+                var registros = data.citas;
+
+                registros.forEach(element => {
+                    //var objeto = element;
+                    var fila = tabla.insertRow();
+                    var celda1 = fila.insertCell();
+                    var celda2 = fila.insertCell();
+                    var celda3 = fila.insertCell();
+                    var celda4 = fila.insertCell();
+                    var celda5 = fila.insertCell();
+                    var celda6 = fila.insertCell();
+                    var celda7 = fila.insertCell();
+                    var celda8 = fila.insertCell();
+                    var celda9 = fila.insertCell();
+                    var celda10 = fila.insertCell();
+                    var celda11 = fila.insertCell();
+                    var celda12 = fila.insertCell();
+                    var celda13 = fila.insertCell();
+
+
+                    celda1.innerHTML = element.deriva;
+
+                    celda2.innerHTML = element.paciente;
+                    celda3.innerHTML = element.fechaNacimiento;
+                    celda4.innerHTML = element.fecha;
+                    celda5.innerHTML = element.hora;
+                    celda6.innerHTML = element.localidad;
+                    celda7.innerHTML = element.id;
+
+                    celda8.className = 'text-center';
+                    celda9.className = 'text-center';
+                    celda10.className = 'text-center';
+                    celda12.className = 'text-center';
+                    celda11.className = 'text-center';
+                    celda13.className = 'text-center';
+
+
+                    if (element.primeraVez == "Primera vez") {
+                        celda8.innerHTML = check;
+                        celda9.innerHTML = xmark;
+                    } else {
+                        celda8.innerHTML = xmark;
+                        celda9.innerHTML = check;
+                    }
+
+                    if (element.condicion == 'Agendado') {
+                        celda10.innerHTML = check;
+                        celda11.innerHTML = xmark;
+                        celda12.innerHTML = xmark;
+                    }
+                    else if (element.condicion == 'Reagendado') {
+                        celda10.innerHTML = xmark;
+                        celda11.innerHTML = check;
+                        celda12.innerHTML = xmark;
+                    }
+                    else {
+                        celda10.innerHTML = xmark;
+                        celda11.innerHTML = xmark;
+                        celda12.innerHTML = check;
+                    }
+
+                    if (element.asiste == 'Asistió') {
+                        celda13.innerHTML = check;
+                    } else {
+                        celda13.innerHTML = xmark;
+                    }
+
+                })
+
+            
+            })
+
+            .catch(error => {
+                console.error("Error en la comunicación con el servidor", error);
+            });
+    });
+
+    var excel = document.getElementById("excel");
+
+    excel.addEventListener('click', function () {
+        let jsonData = parametroActual
+
+        const url = "/api/generar/excel";
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jsonData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                const alerta = document.createElement('div');
+                var zona = document.getElementById("zonaAlerta");
+
+
+                alerta.addEventListener('click', function () {
+                    alerta.style = "transition: all ease 2s"
+                    alerta.style.marginTop = "-1000px";
+                })
+
+                if (data.estatus == "success") {
+                    console.log(data.ruta);
+                    window.location.href = "/api/descargar/excel/"+data.ruta;
+                    alerta.className = "alert alert-success";
+                }
+                else{
+                    alerta.className = "alert alert-danger";
+                }
+                
+                alerta.innerHTML = data.respuesta;
+            })
+            .catch(error => {
+                console.error("Error en la comunicación con el servidor", error);
+            });
+    });
+</script>
 {%endblock%}

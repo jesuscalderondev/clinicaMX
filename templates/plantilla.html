@@ -95,7 +95,7 @@
 		{%with messages = get_flashed_messages()%}
 		{%if messages%}
 		{%for i in messages%}
-		<div class="position-fixed  bg-light" style="z-index: 100;">
+		<div class="position-fixed  bg-light" style="z-index: 100;" id="zonaAlerta">
 			<div class="alert alert-info" id="alerta" role="alert">
 				{{i}}
 			</div>
@@ -106,6 +106,7 @@
 			alerta.addEventListener('click', function () {
 				alerta.style = "transition: all ease 2s"
 				alerta.style.marginTop = "-1000px";
+				alerta.remove();
 			})
 		</script>
 		{%endfor%}
