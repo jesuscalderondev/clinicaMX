@@ -7,11 +7,11 @@ from dotenv import load_dotenv
 from datetime import date, time, datetime
 import psycopg2
 from sqlalchemy import select
-
 from functions import passwordHash
 
-#database = f'postgresql://fl0user:SjVQIKkY24oD@ep-black-snow-a5xfghmv.us-east-2.aws.neon.fl0.io:5432/database'
-database = 'sqlite:///database.db'
+databaseString = getenv("database")
+database = f'{databaseString}sslmode=require'
+#database = 'sqlite:///database.db'
 engine = create_engine(database)
 Session = sessionmaker(bind=engine)
 session = Session()
