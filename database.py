@@ -9,7 +9,7 @@ import psycopg2
 from sqlalchemy import select
 from functions import passwordHash
 
-databaseString = str(getenv("database"))
+databaseString = str(getenv("DATABASE"))
 database = f'{databaseString}?sslmode=require'
 #database = 'sqlite:///database.db'
 engine = create_engine(database)
