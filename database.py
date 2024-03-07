@@ -21,6 +21,7 @@ sslmode = getenv("SSLMODE")
 print(hostdb, userdb)
 
 database = f'postgresql://{userdb}:{passdb}@{hostdb}:{portdb}/{namedb}?sslmode={sslmode}'
+
 #database = 'sqlite:///database.db'
 engine = create_engine(database)
 Session = sessionmaker(bind=engine)
