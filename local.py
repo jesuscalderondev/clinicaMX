@@ -216,4 +216,4 @@ if __name__ == '__main__':
     Base.metadata.create_all(engine)
     programador.start()
 
-    app.run(debug=True, port=getenv('PORT'))
+    app.run(port=getenv('PORT'))
