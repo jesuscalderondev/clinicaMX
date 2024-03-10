@@ -20,7 +20,7 @@ sslmode = getenv("SSLMODE")
 
 print(hostdb, userdb)
 
-database = f'postgresql://{userdb}:{passdb}@{hostdb}:{portdb}/{namedb}?sslmode={sslmode}'
+database = f'postgresql://fl0user:gta93AYnvUkC@ep-sweet-haze-a5xeli2f.us-east-2.aws.neon.fl0.io:5432/database?sslmode=require'
 
 #database = 'sqlite:///database.db'
 engine = create_engine(database)
