@@ -11,18 +11,17 @@ from functions import passwordHash
 
 load_dotenv()
 
-hostdb = getenv("HOSTDB")
+""" hostdb = getenv("HOSTDB")
 userdb = getenv("USERDB")
 passdb = getenv("PASSDB")
 portdb = getenv("PORTDB")
 namedb = getenv("NAMEDB")
-sslmode = getenv("SSLMODE")
+sslmode = getenv("SSLMODE") """
 
-print(hostdb, userdb)
 
-database = f'postgresql://fl0user:gta93AYnvUkC@ep-sweet-haze-a5xeli2f.us-east-2.aws.neon.fl0.io:5432/database?sslmode=require'
+#database = f'postgresql://{userdb}:{passdb}@{hostdb}:{portdb}/{namedb}?sslmode={sslmode}'
 
-#database = 'sqlite:///database.db'
+database = 'sqlite:///database.db'
 engine = create_engine(database)
 Session = sessionmaker(bind=engine)
 session = Session()

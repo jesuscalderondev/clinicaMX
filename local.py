@@ -209,11 +209,9 @@ app.register_blueprint(apis)
 programador.add_job(agendar, 'cron', hour=8, minute=50)
 programador.add_job(agendar, 'cron', hour=9, minute=50)
 
-
 if __name__ == '__main__':
     load_dotenv()
     zona = pytz.timezone("America/Mexico_City")
     Base.metadata.create_all(engine)
     programador.start()
-
     app.run(port=getenv('PORT'))
