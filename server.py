@@ -12,8 +12,6 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from database import *
 from functions import *
 
-programador = BackgroundScheduler()
-
 app = Flask(__name__)
 app.secret_key = os.environ['SECRET_KEY']
 
@@ -205,9 +203,5 @@ app.register_blueprint(turnos)
 from apis import apis
 app.register_blueprint(apis)
 
-
-programador.add_job(agendar, 'cron', hour=8, minute=50)
-programador.add_job(agendar, 'cron', hour=9, minute=50)
 zona = pytz.timezone("America/Mexico_City")
 Base.metadata.create_all(engine)
-programador.start()

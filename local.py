@@ -7,12 +7,10 @@ from datetime import timedelta, timezone
 from werkzeug.utils import secure_filename
 import os
 import pytz
-from apscheduler.schedulers.background import BackgroundScheduler
 
 from database import *
 from functions import *
 
-programador = BackgroundScheduler()
 
 app = Flask(__name__)
 app.secret_key = getenv('SECRET_KEY')
@@ -24,9 +22,10 @@ CORS(app, origins=['*'], supports_credentials=True)
 def agendar():
     for i in range(7):
         try:
-            nuevaAgenda = DiaTrabajo(datetime.strftime(datetime.now() + timedelta(days=i), '%Y-%m-%d'), 15, '8:30', '13:30')
-            session.add(nuevaAgenda)
-            session.commit()
+            if datetime.today().weekday() not in [6, 5]:
+                nuevaAgenda = DiaTrabajo(datetime.strftime(datetime.now() + timedelta(days=i), '%Y-%m-%d'), 15, '8:30', '13:30')
+                session.add(nuevaAgenda)
+                session.commit()
         except Exception as e:
             print("Error: ", e)
             session.rollback()
@@ -77,7 +76,7 @@ def subir_video():
 
                 # Guardar el archivo en el servidor
                 nombre_archivo = secure_filename(archivo.filename).split('.mp4')[0]
-                ruta = "static/videos/" + nombre_archivo + '.mp4'
+                ruta = os.getcwd() + "/static/videos/" + nombre_archivo + '.mp4'
                 archivo.save(ruta)
                 nuevoVideo = Video(date.today(), nombre_archivo, ruta)
                 session.add(nuevoVideo)
@@ -88,6 +87,7 @@ def subir_video():
                 flash('Se requier al menos un video para subir')
         except Exception as e:
             flash(e)
+            print(e)
             session.rollback()
             flash('El archivo seleccionado no es seguro o válido, verifique que sea formato .mp4')
         
@@ -206,12 +206,8 @@ from apis import apis
 app.register_blueprint(apis)
 
 
-programador.add_job(agendar, 'cron', hour=8, minute=50)
-programador.add_job(agendar, 'cron', hour=9, minute=50)
-
 if __name__ == '__main__':
     load_dotenv()
     zona = pytz.timezone("America/Mexico_City")
     Base.metadata.create_all(engine)
-    programador.start()
     app.run(port=getenv('PORT'))

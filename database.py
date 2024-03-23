@@ -8,20 +8,26 @@ from datetime import date, time, datetime
 import psycopg2
 from sqlalchemy import select
 from functions import passwordHash
+import os
 
 load_dotenv()
 
-""" hostdb = getenv("HOSTDB")
-userdb = getenv("USERDB")
-passdb = getenv("PASSDB")
-portdb = getenv("PORTDB")
-namedb = getenv("NAMEDB")
-sslmode = getenv("SSLMODE") """
+""" try:
+    userdb = getenv("USERDB")
+    passdb = getenv("PASSDB")
+    namedb = getenv("NAMEDB")
+    portdb = getenv("PORTDB")
+    hostdb = getenv("HOSTDB")
+except:
+    userdb = os.environ["USERDB"]
+    passdb = os.environ["PASSDB"]
+    hostdb = os.environ["HOSTDB"]
+    portdb = os.environ["PORTDB"]
+    namedb = os.environ["NAMEDB"] """
+    
 
+database = f"sqlite:///database.db"
 
-#database = f'postgresql://{userdb}:{passdb}@{hostdb}:{portdb}/{namedb}?sslmode={sslmode}'
-
-database = 'sqlite:///database.db'
 engine = create_engine(database)
 Session = sessionmaker(bind=engine)
 session = Session()

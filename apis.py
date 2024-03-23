@@ -78,6 +78,7 @@ def videos():
     
     return jsonify(videos = videos)
 
+
 def convertirTurnoJson(Cita:Turno):
     return {'paciente' : Cita.paciente, 'deriva' : Cita.deriva, 'fecha' : f'{Cita.fecha}', 'hora' : f'{Cita.hora}', 'localidad' : Cita.localidad, 'id' : Cita.id}
 
