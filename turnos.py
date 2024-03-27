@@ -117,3 +117,4 @@ def noAsiste(cita):
         flash('La cita seleccionada no existe')
 
     return redirect('/turnos/hoy')
+

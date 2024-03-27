@@ -21,14 +21,17 @@ CORS(app, origins=['*'], supports_credentials=True)
 
 def agendar():
     for i in range(7):
+        dia = datetime.now() + timedelta(days=i)
+        #Revertir
+        #if dia.weekday() not in [6, 5]:
         try:
-            if datetime.today().weekday() not in [6, 5]:
-                nuevaAgenda = DiaTrabajo(datetime.strftime(datetime.now() + timedelta(days=i), '%Y-%m-%d'), 15, '8:30', '13:30')
-                session.add(nuevaAgenda)
-                session.commit()
+            nuevaAgenda = DiaTrabajo(datetime.strftime(dia, '%Y-%m-%d'), 15, '8:30', '13:30')
+            session.add(nuevaAgenda)
+            session.commit()
         except Exception as e:
             print("Error: ", e)
             session.rollback()
+
 
 @app.route('/')
 def index():
@@ -108,48 +111,6 @@ def eliminarVideo(id):
     finally:
         return redirect('/subir_video')
 
-#@requiredSession
-@app.route('/agenda/cambiar', methods=['GET', 'POST'])
-def cambiarAgenda():
-    if request.method == 'POST':
-
-        try:
-            data = request.form
-
-            print(data)
-
-            fecha = data['fecha']
-            inicio = data['inicio']
-            fin = data['fin']
-            intervalo = data['intervalo']
-
-            laborable = 'laborable' not in data
-
-            nuevo = session.query(DiaTrabajo).filter(DiaTrabajo.fecha == fecha).first()
-
-            if nuevo != None:
-                if laborable and inicio != "" and fin != "" and intervalo != "":
-                    nuevo.inicio = datetime.strptime(inicio, "%H:%M").time()
-                    nuevo.fin = datetime.strptime(fin, "%H:%M").time()
-                    nuevo.intervalo = intervalo
-                nuevo.laborable = laborable
-            else:
-                if laborable:
-                    nuevo = DiaTrabajo(fecha, intervalo, inicio, fin)
-                else:
-                    nuevo = DiaTrabajo(fecha, 15, datetime.now().time(), datetime.now().time())
-                nuevo.laborable = laborable
-            
-            session.add(nuevo)
-            session.commit()
-
-            flash('Se ha actualizado de manera correcta la fecha para trabajo')
-        except Exception as e:
-            flash(e)
-            print(e)
-            session.rollback()
-            flash('Ha ocurrido un error a la hora de modificar la fecha')
-    return render_template('agenda.html', fechaMin = date.today() + timedelta(days=3))
 
 #@requiredSession
 @app.route('/historial/citas')
@@ -205,9 +166,13 @@ app.register_blueprint(turnos)
 from apis import apis
 app.register_blueprint(apis)
 
+from agenda import agenda
+app.register_blueprint(agenda)
+
 
 if __name__ == '__main__':
     load_dotenv()
     zona = pytz.timezone("America/Mexico_City")
     Base.metadata.create_all(engine)
-    app.run(port=getenv('PORT'))
+    agendar()
+    app.run(port=getenv('PORT'), debug=True)

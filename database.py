@@ -88,6 +88,7 @@ class Turno(Base):
             self.hora = datetime.strptime(hora, "%H:%M").time()
         except:
             self.hora = hora
+            
         self.motivo = motivo
         self.paciente = paciente
         try:

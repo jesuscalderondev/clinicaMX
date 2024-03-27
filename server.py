@@ -7,7 +7,6 @@ from datetime import timedelta, timezone
 from werkzeug.utils import secure_filename
 import os
 import pytz
-from apscheduler.schedulers.background import BackgroundScheduler
 
 from database import *
 from functions import *

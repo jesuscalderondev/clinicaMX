@@ -35,11 +35,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 async def agendar(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     #Cambiar desc a asc
     agenda = session.query(DiaTrabajo).filter(DiaTrabajo.fecha >  datetime.now() - timedelta(days=1), DiaTrabajo.laborable == True).order_by(asc(DiaTrabajo.id)).limit(6)
-    update.message.from_user.id
+    print(update.message.from_user.id)
     try:
         keyboard = []
-
         for dia in agenda:
+            print(dia)
             keyboard.append([InlineKeyboardButton(f"🗓️ {dia.fecha}", callback_data=f"{dia.fecha}")])
 
         reply_markup = InlineKeyboardMarkup(keyboard)
@@ -57,7 +57,6 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await query.edit_message_text(text=f"Has seleccionado: {query.data}")
 
     nuevoTurno = session.query(Turno).filter(Turno.idTelegram == str(query.message.chat.id), Turno.paciente == "Sin definir").order_by(Turno.id.desc()).first()
-    print(nuevoTurno)
     if nuevoTurno == None:
         print("Si entra")
         nuevoTurno = Turno(query.data, None, "Sin definir", "Sin definir", "Sin localidad", "Sin definir", "Sin definir", None)
@@ -68,14 +67,17 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             session.add(nuevoTurno)
             session.commit()
             horasJson = obtenerHoraCita(query.data)
-            keyboard = []
 
-            for hora in horasJson:
-                keyboard.append([InlineKeyboardButton(f"🗓️ {hora}", callback_data=f"{hora}")])
+            if len(horasJson) > 0:
+                keyboard = []
+                for hora in horasJson:
+                    keyboard.append([InlineKeyboardButton(f"🗓️ {hora}", callback_data=f"{hora}")])
 
-            reply_markup = InlineKeyboardMarkup(keyboard)
+                reply_markup = InlineKeyboardMarkup(keyboard)
 
-            await query.message.reply_text("Por favor, selecciona una hora para tu cita:", reply_markup=reply_markup)
+                await query.message.reply_text("Por favor, selecciona una hora para tu cita:", reply_markup=reply_markup)
+            else:
+                await query.message.reply_text("Lo sentimos... no hay horarios de citas para este día.\nIntente con un día diferente.")
         except Exception as e:
             print(e, 1)
             await update.callback_query.message.reply_text("⚠️ Ha ocurrido un error a la hora de registrar tu cita.\nRecomendamos agendar ua nueva cita y brindar la información de manera correcta")
@@ -86,8 +88,11 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         try:
             nuevoTurno.hora = datetime.strptime(query.data, "%H:%M").time()
             try:
+                print(nuevoTurno.hora)
+                print(nuevoTurno.fecha)
                 session.add(nuevoTurno)
                 session.commit()
+                print("Lo guarda")
                 keyboard = [
                     [InlineKeyboardButton("Paciente sano", callback_data="Paciente sano")],
                     [InlineKeyboardButton("Crónico", callback_data="Crónico")],
@@ -112,6 +117,7 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             if query.data in motivos:
                 nuevoTurno.motivo = query.data
                 try:
+                    print(nuevoTurno.hora, "**********_____*******")
                     session.add(nuevoTurno)
                     session.commit()
                     keyboard = [
@@ -176,15 +182,18 @@ def procesarTexto(text:str, context:ContextTypes, update:Update):
     if 'datos del paciente' in textoPlano:
         try:
             parametros = textoPlano.split(": ")
-            nuevoTurno = session.query(Turno).filter(Turno.idTelegram == str(update.message.chat.id), Turno.paciente == "Sin definir").order_by(Turno.id.desc()).first()
+            nuevoTurno = session.query(Turno).filter(Turno.idTelegram == str(update.message.chat.id), Turno.paciente == "Sin definir", Turno.hora != None).order_by(Turno.id.desc()).first()
             voluntario = session.query(Voluntario).filter(Voluntario.telegramId == str(update.message.chat.id)).first()
             print(voluntario, '******************************************************************************')
             if voluntario == None:
+                session.delete(nuevoTurno)
+                session.commit()
                 return f"❌ La cita no pudo ser asignada, dado que usted no es un usuario autorizado, para poder hacerlo, debe comunicarse con el encargado de registros de voluntarios"
+            
             nuevoTurno.deriva = voluntario.nombreCompleto
             nuevoTurno.localidad = voluntario.localidad
             nuevoTurno.paciente = parametros[1].split("\n")[0].title()
-            print(parametros[2].split("\n")[0], "******************************")
+            print(nuevoTurno.hora)
             nuevoTurno.fechaNacimiento = formatearFecha(parametros[2].split("\n")[0])
             session.add(nuevoTurno)
             session.commit()

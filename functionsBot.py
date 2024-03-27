@@ -21,7 +21,7 @@ def toJson(objetc):
 def obtenerHoraCita(fecha:str):
     try:
         #Reemplazar
-        local = 'ruta de ejecucion'
+        local = 'http://127.0.0.1:5000'
         response = requests.get(f'{local}/api/consultar/horario/{fecha.replace("/", "-")}')
         try:
             hora = response.json()['horas']

@@ -31,14 +31,13 @@ def requiredSession(f):
 
 def crearListaHoras(inicio, fin, intervalo, horasNoValdas):
     horas = []
-    for hora in range(inicio, fin+1):
+    for hora in range(inicio, 23):
         for a in range(0, 60, intervalo):
             horaf = f"{hora:02}:{a:02}"
             if horaf not in horasNoValdas:
                 horas.append(horaf)
-    #Modificar
-    """ if(horas[-1] == '15:45' or horas[-1][:2] == '16'):
-        horas.pop() """
+    if horas[-1][3:] in ["45", "00"]:
+        horas.pop()
     return horas
 
 def obtenerHoraCita(fecha:str):
@@ -66,4 +65,4 @@ def formatearFecha(fechaStr):
             return fecha
         except:
             pass
-    
+

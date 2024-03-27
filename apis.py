@@ -9,15 +9,10 @@ apis = Blueprint('apis', __name__, url_prefix='/api')
 #@requiredSession
 @apis.route('/consultar/horario/<string:fecha>')
 def consularHorario(fecha):
-    print(fecha)
     intervalo = session.query(DiaTrabajo).filter(DiaTrabajo.fecha.like(f'%{fecha}%')).first()
-    print(intervalo)
     if intervalo != None:
         #haciendo pruebas aquí
-        horasNoValdasObj = session.query(Turno).filter(Turno.fecha == formatearFecha(fecha), Turno.paciente != "Sin definir").all()
-        print('Joa')
-        print(horasNoValdasObj)
-
+        horasNoValdasObj = session.query(Turno).filter(Turno.fecha == fecha, Turno.paciente != "Sin definir").all()
         horasNoValidas = ["11:00", "11:15", "11:20"]
         for i in horasNoValdasObj:
             hora = f"{i.hora.hour:02}:{i.hora.minute:02}"
@@ -28,17 +23,22 @@ def consularHorario(fecha):
                 else:
                     tiempoExtra = 15
 
-                print(int(tiempoExtra/intervalo.intervalo))
                 for hora2 in range(0, int(tiempoExtra/intervalo.intervalo)):
                     horaSrt = datetime.combine(date.today(), i.hora)
                     horaSrt = horaSrt + timedelta(minutes=intervalo.intervalo + (intervalo.intervalo * hora2))
                     horasNoValidas.append(horaSrt.strftime('%H:%M'))
-        
+        print(horasNoValidas)
         inicio = intervalo.inicio.hour
+
+        if datetime.now().date() == intervalo.fecha:
+            inicio = datetime.now().hour + 1
+
+        print(datetime.now().date(), intervalo.fecha)
+        print(inicio, "Hora inicio fecha")
         fin = intervalo.fin.hour
 
         #Modificar
-        if inicio <= 11:
+        if inicio <= 12:
             horas = crearListaHoras(inicio, fin, intervalo.intervalo, horasNoValidas)
         else:
             horas = []
