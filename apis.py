@@ -94,7 +94,7 @@ def filtradoDeBusqueda():
 
         print(data)
         
-        query = query.where(Turno.asiste != "Pendiente")
+        query = query.where(Turno.asiste == "Pendiente")
 
         if 'nombre' in data:
             query = query.where(Turno.paciente.like(f"%{data['nombre']}%"))

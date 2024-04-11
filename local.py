@@ -20,17 +20,16 @@ CORS(app, origins=['*'], supports_credentials=True)
 #programador.add_job(saludar, 'cron', hour=20, minute=50, second=45, args=['holaaa'])
 
 def agendar():
-    for i in range(7):
+    for i in range(30):
         dia = datetime.now() + timedelta(days=i)
-        #Revertir
-        #if dia.weekday() not in [6, 5]:
-        try:
-            nuevaAgenda = DiaTrabajo(datetime.strftime(dia, '%Y-%m-%d'), 15, '8:30', '13:30')
-            session.add(nuevaAgenda)
-            session.commit()
-        except Exception as e:
-            print("Error: ", e)
-            session.rollback()
+        if dia.weekday() not in [6, 5, 2]:
+            try:
+                nuevaAgenda = DiaTrabajo(datetime.strftime(dia, '%Y-%m-%d'), 15, '8:30', '13:30')
+                session.add(nuevaAgenda)
+                session.commit()
+            except Exception as e:
+                print("Error: ", e)
+                session.rollback()
 
 
 @app.route('/')

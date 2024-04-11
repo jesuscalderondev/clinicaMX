@@ -2,6 +2,7 @@ from flask import Blueprint
 from flask import request, render_template, flash, redirect
 from datetime import timedelta
 
+import traceback
 from database import *
 from functions import *
 
@@ -54,36 +55,42 @@ def reprogramar(turno:Turno):
     dia = 1
     while True:
         fecha = turno.fecha + timedelta(days=dia)
-        fechaStr = fecha.strftime('%d/%m/%Y')
+        fechaStr = fecha.strftime('%Y-%m-%d')
+        print(fechaStr)
 
-        diaTrabajo = session.query(DiaTrabajo).filter(DiaTrabajo.fecha == fecha, DiaTrabajo.laborable == True).first()
-        horasNoValdasObj = session.query(Turno).filter(Turno.fecha == fecha, Turno.paciente != "Sin definir").all()
-        horasNoValidas = ["11:00", "11:15", "11:20"]
-        for i in horasNoValdasObj:
-            hora = f"{i.hora.hour:02}:{i.hora.minute:02}"
-            horasNoValidas.append(hora)
-            if i.motivo == 'Embarazo':
-                if i.veces == 'Primera vez':
-                    tiempoExtra = 30
-                else:
-                    tiempoExtra = 15
+        diaTrabajo = session.query(DiaTrabajo).filter(DiaTrabajo.fecha == fechaStr, DiaTrabajo.laborable == True).first()
+        if diaTrabajo != None:
+            print(diaTrabajo.fecha)
+            
+            horasNoValdasObj = session.query(Turno).filter(Turno.fecha == fecha, Turno.paciente != "Sin definir").all()
 
-                for hora2 in range(0, int(tiempoExtra/diaTrabajo.intervalo)):
-                    horaSrt = datetime.combine(date.today(), i.hora)
-                    horaSrt = horaSrt + timedelta(minutes=diaTrabajo.intervalo + (diaTrabajo.intervalo * hora2))
-                    horasNoValidas.append(horaSrt.strftime('%H:%M'))
-        
-        lista = crearListaHoras(diaTrabajo.inicio.hour, diaTrabajo.fin.hour, diaTrabajo.intervalo, horasNoValidas)
-        
+            horasNoValidas = ["11:00", "11:15", "11:20"]
+            for i in horasNoValdasObj:
+                hora = f"{i.hora.hour:02}:{i.hora.minute:02}"
+                horasNoValidas.append(hora)
+                if i.motivo == 'Embarazo':
+                    if i.veces == 'Primera vez':
+                        tiempoExtra = 30
+                    else:
+                        tiempoExtra = 15
 
-        if turno.hora in lista:
-            turno.fecha = fecha
-            turno.condicion = "Reagendado"
-            session.add(turno)
-            session.commit()
-            break
-        else:
-            dia+=1
+                    for hora2 in range(0, int(tiempoExtra/diaTrabajo.intervalo)):
+                        horaSrt = datetime.combine(date.today(), i.hora)
+                        horaSrt = horaSrt + timedelta(minutes=diaTrabajo.intervalo + (diaTrabajo.intervalo * hora2))
+                        horasNoValidas.append(horaSrt.strftime('%H:%M'))
+            
+            lista = crearListaHoras(diaTrabajo.inicio.hour, diaTrabajo.fin.hour, diaTrabajo.intervalo, horasNoValidas)
+            
+            print(lista)
+            if turno.hora.strftime('%H:%M') in lista:
+                turno.fecha = fecha
+                turno.condicion = "Reagendado"
+                session.add(turno)
+                session.commit()
+                break
+
+        dia+=1
+
     return fechaStr
 
 @agenda.route("/reprogramar")
@@ -99,5 +106,5 @@ def reprogramarCita(id):
         flash(f"La nueva fecha de su cita es {fecha} a las {str(cita.hora)[:5]}")
         return redirect('/agenda/reprogramar')
     except Exception as e:
-        print(e)
+        print(traceback.extract_tb(e.__traceback__))
         return "Error a la hora de reagendar, esta cita fue eliminada anteriormente"

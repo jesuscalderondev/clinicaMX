@@ -17,9 +17,9 @@ def toJson(objetc):
             json[atributo] = getattr(objetc, atributo)
         return json
     else:
-        return {}
-
-
+        return {
+            
+        }
 
 def requiredSession(f):
     def decorated(*args, **kwargs):
