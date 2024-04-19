@@ -13,7 +13,7 @@ from functions import *
 
 
 app = Flask(__name__)
-app.secret_key = getenv('SECRET_KEY')
+app.secret_key = os.environ["SECRET_KEY"]
 
 CORS(app, origins=['*'], supports_credentials=True)
 
@@ -168,10 +168,11 @@ app.register_blueprint(apis)
 from agenda import agenda
 app.register_blueprint(agenda)
 
+load_dotenv()
+zona = pytz.timezone("America/Mexico_City")
+print(datetime.now())
+Base.metadata.create_all(engine)
+agendar()
 
 if __name__ == '__main__':
-    load_dotenv()
-    zona = pytz.timezone("America/Mexico_City")
-    Base.metadata.create_all(engine)
-    agendar()
     app.run(port=getenv('PORT'), debug=True)
