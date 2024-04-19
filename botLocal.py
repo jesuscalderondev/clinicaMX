@@ -1,7 +1,6 @@
 from telegram import Update, ReplyKeyboardMarkup, ReplyKeyboardRemove, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes, CallbackQueryHandler, CallbackContext
 from dotenv import load_dotenv
-from os import getenv
 from datetime import datetime, date, time, timedelta
 from sqlalchemy import desc, asc
 from database import *
@@ -9,8 +8,8 @@ from functionsBot import *
 import os
 
 load_dotenv()
-userBot = getenv('USER_BOT')
-token = getenv('TOKEN')
+userBot = os.environ["USER_BOT"]
+token = os.environ["TOKEN"]
 app = Application.builder().token(token).build()
 
 def registrarCita(texto:str, usuario:str) -> Boolean:

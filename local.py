@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, flash
 from flask import session as cookies
 from flask_cors import CORS
-from os import getenv
 from dotenv import load_dotenv
 from datetime import timedelta, timezone
 from werkzeug.utils import secure_filename
@@ -16,8 +15,6 @@ app = Flask(__name__)
 app.secret_key = os.environ["SECRET_KEY"]
 
 CORS(app, origins=['*'], supports_credentials=True)
-
-#programador.add_job(saludar, 'cron', hour=20, minute=50, second=45, args=['holaaa'])
 
 def agendar():
     for i in range(30):
@@ -175,4 +172,4 @@ Base.metadata.create_all(engine)
 agendar()
 
 if __name__ == '__main__':
-    app.run(port=getenv('PORT'), debug=True)
+    app.run(debug=True)

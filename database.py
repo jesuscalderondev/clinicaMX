@@ -2,7 +2,6 @@ from sqlalchemy import Column, Integer, String, Float, Date, Time, Boolean, Fore
 from sqlalchemy import or_, and_
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 from sqlalchemy import create_engine
-from os import getenv
 from dotenv import load_dotenv
 from datetime import date, time, datetime
 import psycopg2
@@ -11,21 +10,6 @@ from functions import passwordHash
 import os
 
 load_dotenv()
-
-""" try:
-    userdb = getenv("USERDB")
-    passdb = getenv("PASSDB")
-    namedb = getenv("NAMEDB")
-    portdb = getenv("PORTDB")
-    hostdb = getenv("HOSTDB")
-except:
-    userdb = os.environ["USERDB"]
-    passdb = os.environ["PASSDB"]
-    hostdb = os.environ["HOSTDB"]
-    portdb = os.environ["PORTDB"]
-    namedb = os.environ["NAMEDB"] """
-    
-
 database = f"sqlite:///database.db"
 
 engine = create_engine(database)
